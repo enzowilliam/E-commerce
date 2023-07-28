@@ -74,9 +74,12 @@ export function Home() {
                 <span className="mr-8 text-sm text-slate-500 ">
                   {product.description}
                 </span>
-                <span className="text-lg font-semibold">
-                  {formatPrice(product.price)}
-                </span>
+                <div className="flex gap-2 items-center">
+                  <span className="text-lg font-semibold">
+                    {formatPrice(product.price)}
+                  </span>
+                  <span className="font-light">ID: {product.id}</span>
+                </div>
               </div>
               <span className="text-xs mb-4 text-slate-500">
                 {product.points} pontos
