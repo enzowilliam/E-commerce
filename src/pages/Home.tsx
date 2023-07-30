@@ -21,9 +21,9 @@ export function Home() {
   });
 
   const addToCart = (product: Product): void => {
-    setCartItems(prevCartItems => {
+    setCartItems((prevCartItems: any[]) => {
       const productIndex = prevCartItems.findIndex(
-        item => item.id === product.id,
+        (        item: { id: string; }) => item.id === product.id,
       );
 
       if (productIndex !== -1) {
