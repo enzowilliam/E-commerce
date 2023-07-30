@@ -21,41 +21,33 @@ export function Home() {
   });
 
   const addToCart = (product: Product): void => {
-    const productInCart = cartItems.find(
-      (item: { id: string }) => item.id === product.id,
-    );
+    setCartItems(prevCartItems => {
+      const productIndex = prevCartItems.findIndex(
+        item => item.id === product.id,
+      );
 
-    if (productInCart) {
-      setCartItems((prevCartItems: any[]) => {
-        const updatedCart = prevCartItems.map(
-          (item: { id: string; quantity: number }) => ({
-            id: item.id,
-            quantity:
-              item.id === product.id ? item.quantity + 1 : item.quantity,
-          }),
-        );
+      if (productIndex !== -1) {
+        const updatedCart = [...prevCartItems];
+        updatedCart[productIndex].quantity++;
         localStorage.setItem('cartItems', JSON.stringify(updatedCart));
         return updatedCart;
-      });
-    } else {
-      setCartItems((prevCartItems: any) => {
+      } else {
         const updatedCart = [...prevCartItems, { ...product, quantity: 1 }];
         localStorage.setItem('cartItems', JSON.stringify(updatedCart));
         return updatedCart;
-      });
-    }
+      }
+    });
   };
-
-  console.log(cartItems);
 
   return (
     <>
       <Navbar
+        productsInCart={cartItems.length > 0 ? true : false}
         setSearch={setSearch}
         cartItems={cartItems}
         searchVisible={true}
       />
-      <div className="mt-4 mx-4 md:mx-24 lg:mx-40 xl:mx-96 ">
+      <div className="mt-4 mx-4 pb-4 md:mx-24 lg:mx-40 xl:mx-96 ">
         <div
           className="grid grid-flow-row gap-12
             sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
@@ -67,7 +59,7 @@ export function Home() {
                 alt={product.name}
                 className="w-full object-cover h-72 rounded-lg"
               />
-              <div className="flex justify-between items-start mt-2">
+              <div className="flex justify-between mt-2">
                 <span className="mt-1 text-sm max-w-[7rem] text-slate-700 ">
                   {product.name}
                 </span>
@@ -78,9 +70,9 @@ export function Home() {
                   <span className="text-lg font-semibold">
                     {formatPrice(product.price)}
                   </span>
-                  <span className="font-light">ID: {product.id}</span>
                 </div>
               </div>
+              <span className="font-light">REF: {product.id}</span>
               <span className="text-xs mb-4 text-slate-500">
                 {product.points} pontos
               </span>

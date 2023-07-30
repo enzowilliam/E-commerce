@@ -5,12 +5,14 @@ interface NavbarProps {
   setSearch?: (search: string) => void;
   cartItems?: (search: string) => void;
   searchVisible: boolean;
+  productsInCart?: boolean;
 }
 
 export const Navbar = ({
   setSearch,
   cartItems,
   searchVisible,
+  productsInCart,
 }: NavbarProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (setSearch !== undefined) {
@@ -38,7 +40,11 @@ export const Navbar = ({
           )}
           <Link to="/checkout" state={cartItems}>
             <ShoppingCart
-              className="text-2xl text-neutral-700 cursor-pointer"
+              className={
+                productsInCart
+                  ? 'text-2xl text-green-700 cursor-pointer'
+                  : 'text-2xl text-neutral-700 cursor-pointer'
+              }
               strokeWidth={2}
             />
           </Link>
