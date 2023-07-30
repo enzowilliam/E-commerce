@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { Minus, Plus } from 'lucide-react';
 import 'react-toastify/dist/ReactToastify.css';
 import { Navbar } from '../components/Navbar';
+import { gifts } from '../store/gifts';
 
 interface Product {
   name: string;
@@ -19,10 +20,11 @@ export const Checkout = () => {
   const [cartItems, setCartItems] = useState<Product[]>(
     storedCartItems ? JSON.parse(storedCartItems) : [],
   );
-
   const [convertedCurrency, setConvertedCurrency] = useState({
     USDBRL: { high: 0 },
   });
+  const [giftName, setGiftName] = useState('');
+  const [checkout, setCheckout] = useState(false);
 
   const handleAddQuantity = (product: Product) => {
     const updatedCart = cartItems.map(item =>
@@ -110,6 +112,43 @@ export const Checkout = () => {
       theme: 'light',
     });
 
+  useEffect(() => {
+    const filteredGifts = gifts.filter(gift => gift.name === giftName);
+
+    console.log(filteredGifts);
+
+    const mappedGifts = filteredGifts.map(gift => {
+      return gift;
+    });
+
+    setCartItems(prevCartItems => {
+      const updatedCart = [...prevCartItems, ...mappedGifts];
+      localStorage.setItem('cartItems', JSON.stringify(updatedCart));
+      return updatedCart;
+    });
+  }, [giftName]);
+
+  const proceedToCheckout = () => {
+
+    if (calculateTotalPoints() >= 500 && calculateTotalPoints() < 1000) {
+      setGiftName('Chaveiro Jeep');
+    } else if (calculateTotalPoints() >= 1000 && calculateTotalPoints() < 1500) {
+      setGiftName('Boné Basico');
+    } else if (calculateTotalPoints() >= 1500) {
+      setGiftName('Camiseta Personalizada');
+    } else {
+      setCheckout(true);
+    }
+
+    setCheckout(true);
+  };
+  const handlePayment = () => {
+    localStorage.removeItem('cartItems');
+    setCartItems([]);
+    setCheckout(false);
+    notify();
+  };
+
   return (
     <div>
       <Navbar searchVisible={false} />
@@ -182,18 +221,26 @@ export const Checkout = () => {
             </div>
             <button
               className="bg-slate-900 w-full text-white rounded-md px-2.5 py-1.5 mt-auto transition-colors hover:bg-slate-700"
-              onClick={notify}
+              onClick={proceedToCheckout}
             >
               Finalizar compra
             </button>
           </div>
+          {checkout && (
+            <button
+              className="bg-green-900 w-full text-white rounded-md px-2.5 py-1.5 mt-auto transition-colors hover:bg-slate-700"
+              onClick={handlePayment}
+            >
+              Realizar pagamento
+            </button>
+          )}
         </div>
       </div>
-      {calculateTotalPoints() >= 300 ? (
+      {calculateTotalPoints() >= 500 ? (
         <div className="flex justify-center pt-3 pb-4">
           <span>
-            Parabéns por ter acumulado mais de 300 pontos,
-            <br /> voce levará para casa um <strong> super </strong> Boné de
+            Parabéns por ter acumulado {calculateTotalPoints()} pontos,
+            <br /> voce levará para casa um <strong> super </strong>
             brinde!
           </span>
         </div>
