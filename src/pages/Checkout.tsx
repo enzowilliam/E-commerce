@@ -129,10 +129,12 @@ export const Checkout = () => {
   }, [giftName]);
 
   const proceedToCheckout = () => {
-
     if (calculateTotalPoints() >= 500 && calculateTotalPoints() < 1000) {
       setGiftName('Chaveiro Jeep');
-    } else if (calculateTotalPoints() >= 1000 && calculateTotalPoints() < 1500) {
+    } else if (
+      calculateTotalPoints() >= 1000 &&
+      calculateTotalPoints() < 1500
+    ) {
       setGiftName('Boné Basico');
     } else if (calculateTotalPoints() >= 1500) {
       setGiftName('Camiseta Personalizada');
@@ -219,21 +221,23 @@ export const Checkout = () => {
               <span className="font-extrabold text-lg">Pontos</span>
               <span>{calculateTotalPoints()}</span>
             </div>
-            <button
-              className="bg-slate-900 w-full text-white rounded-md px-2.5 py-1.5 mt-auto transition-colors hover:bg-slate-700"
-              onClick={proceedToCheckout}
-            >
-              Finalizar compra
-            </button>
+            {!checkout && (
+              <button
+                className="bg-slate-900 w-full text-white rounded-md px-2.5 py-1.5 mt-auto transition-colors hover:bg-slate-700"
+                onClick={proceedToCheckout}
+              >
+                Finalizar compra
+              </button>
+            )}
+            {checkout && (
+              <button
+                className="bg-green-900 w-full text-white rounded-md px-2.5 py-1.5 mt-auto transition-colors hover:bg-slate-700"
+                onClick={handlePayment}
+              >
+                Realizar pagamento
+              </button>
+            )}
           </div>
-          {checkout && (
-            <button
-              className="bg-green-900 w-full text-white rounded-md px-2.5 py-1.5 mt-auto transition-colors hover:bg-slate-700"
-              onClick={handlePayment}
-            >
-              Realizar pagamento
-            </button>
-          )}
         </div>
       </div>
       {calculateTotalPoints() >= 500 ? (
