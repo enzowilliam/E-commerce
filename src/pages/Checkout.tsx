@@ -231,7 +231,7 @@ export const Checkout = () => {
             )}
             {checkout && (
               <button
-                className="bg-green-900 w-full text-white rounded-md px-2.5 py-1.5 mt-auto transition-colors hover:bg-slate-700"
+                className="bg-green-900 w-full text-white rounded-md px-2.5 py-1.5 mt-auto transition-colors hover:bg-green-700"
                 onClick={handlePayment}
               >
                 Realizar pagamento
