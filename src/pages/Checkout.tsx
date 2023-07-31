@@ -1,18 +1,11 @@
 import { useEffect, useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
 
 import { Minus, Plus } from 'lucide-react';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Navbar } from '../components/Navbar';
 import { gifts } from '../store/gifts';
-
-interface Product {
-  name: string;
-  imageUrl: string;
-  price: number;
-  points: number;
-  quantity: number;
-}
+import { Product } from '../store/products';
 
 export const Checkout = () => {
   const storedCartItems = localStorage.getItem('cartItems');
@@ -23,7 +16,8 @@ export const Checkout = () => {
   const [convertedCurrency, setConvertedCurrency] = useState({
     USDBRL: { high: 0 },
   });
-  const [giftName, setGiftName] = useState('');
+
+  const [giftPoints, setGiftPoints] = useState(0);
   const [checkout, setCheckout] = useState(false);
 
   const handleAddQuantity = (product: Product) => {
@@ -100,6 +94,39 @@ export const Checkout = () => {
     return totalProductPrice.toFixed(2);
   };
 
+  useEffect(() => {
+    const filteredGifts = gifts.filter(
+      gift => gift.rescuePoints === giftPoints,
+    );
+
+    const mappedGifts = filteredGifts.map(gift => {
+      return gift;
+    });
+
+    setCartItems(prevCartItems => {
+      const updatedCart = [...prevCartItems, ...mappedGifts];
+      localStorage.setItem('cartItems', JSON.stringify(updatedCart));
+      return updatedCart;
+    });
+  }, [giftPoints]);
+
+  const proceedToCheckout = () => {
+    if (calculateTotalPoints() >= 500 && calculateTotalPoints() < 1000) {
+      setGiftPoints(500);
+    } else if (
+      calculateTotalPoints() >= 1000 &&
+      calculateTotalPoints() < 1500
+    ) {
+      setGiftPoints(1000);
+    } else if (calculateTotalPoints() >= 1500) {
+      setGiftPoints(1500);
+    } else {
+      setCheckout(true);
+    }
+
+    setCheckout(true);
+  };
+
   const notify = () =>
     toast.success('compra efetuada com sucesso', {
       position: 'top-center',
@@ -112,38 +139,6 @@ export const Checkout = () => {
       theme: 'light',
     });
 
-  useEffect(() => {
-    const filteredGifts = gifts.filter(gift => gift.name === giftName);
-
-    console.log(filteredGifts);
-
-    const mappedGifts = filteredGifts.map(gift => {
-      return gift;
-    });
-
-    setCartItems(prevCartItems => {
-      const updatedCart = [...prevCartItems, ...mappedGifts];
-      localStorage.setItem('cartItems', JSON.stringify(updatedCart));
-      return updatedCart;
-    });
-  }, [giftName]);
-
-  const proceedToCheckout = () => {
-    if (calculateTotalPoints() >= 500 && calculateTotalPoints() < 1000) {
-      setGiftName('Chaveiro Jeep');
-    } else if (
-      calculateTotalPoints() >= 1000 &&
-      calculateTotalPoints() < 1500
-    ) {
-      setGiftName('Boné Basico');
-    } else if (calculateTotalPoints() >= 1500) {
-      setGiftName('Camiseta Personalizada');
-    } else {
-      setCheckout(true);
-    }
-
-    setCheckout(true);
-  };
   const handlePayment = () => {
     localStorage.removeItem('cartItems');
     setCartItems([]);

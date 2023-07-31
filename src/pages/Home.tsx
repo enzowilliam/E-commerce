@@ -20,22 +20,25 @@ export function Home() {
     return product.name.toLowerCase().includes(search.toLowerCase());
   });
 
-  const addToCart = (product: Product): void => {
-    setCartItems((prevCartItems: any[]) => {
-      const productIndex = prevCartItems.findIndex(
-        (        item: { id: string; }) => item.id === product.id,
+  const addToCart = (productToAdd: Product): void => {
+    setCartItems((prevCartItems: Product[]) => {
+      const updatedCart = prevCartItems.map(item =>
+        item.name === productToAdd.name
+          ? { ...item, quantity: item.quantity + 1 }
+          : item,
       );
 
-      if (productIndex !== -1) {
-        const updatedCart = [...prevCartItems];
-        updatedCart[productIndex].quantity++;
-        localStorage.setItem('cartItems', JSON.stringify(updatedCart));
-        return updatedCart;
-      } else {
-        const updatedCart = [...prevCartItems, { ...product, quantity: 1 }];
-        localStorage.setItem('cartItems', JSON.stringify(updatedCart));
-        return updatedCart;
+      const productExists = prevCartItems.some(
+        item => item.name === productToAdd.name,
+      );
+
+      if (!productExists) {
+        // If the product does not exist in the cart, add it as a new item
+        updatedCart.push({ ...productToAdd, quantity: 1 });
       }
+
+      localStorage.setItem('cartItems', JSON.stringify(updatedCart));
+      return updatedCart;
     });
   };
 

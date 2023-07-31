@@ -25,8 +25,8 @@ export const gifts: Gifts[] = [
     id: '2',
     imageUrl:
       'https://www.hangar33.com.br/dw/image/v2/BFCG_PRD/on/demandware.static/-/Sites-masterCatalog_Lunelli/default/dw0987a661/large/hangar33-1.74782-000156-D1.jpg?sw=900&sfrm=jpg&sm=fit&q=80  ',
-    name: 'Boné Basico',
-    description: 'Boné Basico',
+    name: 'Boné básico',
+    description: 'Boné básico',
     price: 0,
     points: 0,
     quantity: 0,
@@ -37,7 +37,7 @@ export const gifts: Gifts[] = [
     imageUrl:
       'https://www.martdigital.com.br/wp-content/uploads/2019/09/mockup-camiseta.jpg',
     name: 'Camiseta Personalizada',
-    description: 'Camiseta Personalizada',
+    description: 'Camiseta personalizada',
     price: 0,
     points: 0,
     quantity: 0,
