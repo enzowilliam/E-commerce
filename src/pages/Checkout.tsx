@@ -70,7 +70,7 @@ export const Checkout = () => {
       setConvertedCurrency(response);
     };
     convertCurrency();
-  });
+  }, []);
 
   const brl = convertedCurrency.USDBRL.high;
 
